@@ -1,0 +1,33 @@
+.chat {
+	width: 600px;
+	margin: 60px auto 0;
+}
+
+.chat input[type='text'] {
+	box-sizing: border-box;
+	width: 540px;
+}
+
+.chat input[type='submit'] {
+	box-sizing: border-box;
+	width: 60px;
+}
+
+.messages {
+	height: 400px;
+	overflow-y: auto;
+	overflow-wrap: break-word;
+	margin-bottom: 16px;
+	padding: 8px 16px;
+	border: 1px solid gainsboro;
+	background-color: rgba(255, 255, 255, .75);
+}
+
+.messages p {
+	margin: .5rem 0;
+}
+
+span.username {
+	font-weight: bold;
+	color: darkgreen;
+}
