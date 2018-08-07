@@ -64,7 +64,7 @@ export default class Chat extends React.Component {
     const delay = Number(text.split(' ')[1]);
     if (!Number.isNaN(delay)) {
       const delayedText = text.split(' ').slice(2).join(' ');
-      setTimeout(() => this.sendMessage({ username, text: delayedText }), delay);
+      setTimeout(() => this.sendMessage({ username, text: delayedText }), delay * 1000);
     } else {
       this.sendMessage({ username, text });
     }
@@ -77,7 +77,7 @@ export default class Chat extends React.Component {
 
     return (
       <div className='chat'>
-        <h1>chat random</h1>
+        <h1>...</h1>
 
         <div className='messages' ref={msgs => { this.msgs = msgs; }}>
           {messages.map(message => (

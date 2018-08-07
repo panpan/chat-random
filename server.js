@@ -21,7 +21,12 @@ io.on('connection', socket => {
     return rooms;
   };
 
-  const getUsers = room => Object.keys(socket.adapter.rooms[room].sockets);
+  const getCurrRoom = () => {
+    const socketRooms = Object.keys(socket.rooms); // all socket's rooms including socket id room
+    return socketRooms.filter(room => room !== socket.id)[0];
+  };
+
+  const getUsersInRoom = room => Object.keys(socket.adapter.rooms[room].sockets);
 
   const joinRoom = room => {
     socket.join(room, () => {
@@ -30,7 +35,10 @@ io.on('connection', socket => {
   };
 
   const assignRoom = prevRoom => {
-    const availableRoom = getRooms().find(room => room !== prevRoom && getUsers(room).length === 1);
+    const availableRoom = getRooms().find(room => (
+      room !== prevRoom && getUsersInRoom(room).length === 1
+    ));
+
     if (availableRoom) {
       joinRoom(availableRoom);
       socket.emit('message', { text: 'welcome to the chatroom! type a message to say hi' });
@@ -49,12 +57,11 @@ io.on('connection', socket => {
   assignRoom();
 
   socket.on('message', message => {
-    io.emit('message', message);
+    io.to(getCurrRoom()).emit('message', message);
   });
 
   socket.on('hop', () => {
-    const socketRooms = Object.keys(socket.rooms); // all socket's rooms including socket id room
-    const currRoom = socketRooms.filter(room => room !== socket.id)[0];
+    const currRoom = getCurrRoom();
     socket.leave(currRoom, () => {
       socket.to(currRoom).emit('message', { text: 'user has hopped away :(' });
       socket.to(currRoom).emit('message', { text: 'waiting for another user to join...' });

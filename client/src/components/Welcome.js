@@ -28,8 +28,8 @@ export default class Welcome extends React.Component {
 
     return (
       <div className='welcome'>
-        <h1>welcome to random chat!</h1>
-        <p>enter a username to begin:</p>
+        <h1>welcome!</h1>
+        <h4>enter a username to begin chatting:</h4>
 
         <form onSubmit={this.handleSubmit} autoComplete='off'>
           <label htmlFor='username'>username</label>
