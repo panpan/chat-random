@@ -28,44 +28,50 @@ io.on('connection', socket => {
 
   const getUsersInRoom = room => Object.keys(socket.adapter.rooms[room].sockets);
 
-  const joinRoom = room => {
+  const joinRoom = (username, room) => {
     socket.join(room, () => {
-      socket.to(room).emit('message', { text: 'another user has joined! type a message to say hi' });
+      socket.to(room).emit('message', { text: `${username} has joined! type a message to say hi` });
     });
   };
 
-  const assignRoom = prevRoom => {
+  const assignRoom = (username, prevRoom) => {
     const availableRoom = getRooms().find(room => (
       room !== prevRoom && getUsersInRoom(room).length === 1
     ));
 
     if (availableRoom) {
-      joinRoom(availableRoom);
-      socket.emit('message', { text: 'welcome to the chatroom! type a message to say hi' });
+      joinRoom(username, availableRoom);
+      if (prevRoom) {
+        socket.emit('message', { text: 'you\'ve hopped to a new room! type a message to say hi' });
+      } else {
+        socket.emit('message', { text: `welcome to the chatroom, ${username}! type a message to say hi` });
+      }
     } else {
-      const room = shortid.generate();
-      joinRoom(room);
+      const newRoom = shortid.generate();
+      joinRoom(username, newRoom);
       if (prevRoom) {
         socket.emit('message', { text: 'you\'ve hopped to a new room!' });
       } else {
-        socket.emit('message', { text: 'welcome to the chatroom!' });
+        socket.emit('message', { text: `welcome to the chatroom, ${username}!` });
       }
       socket.emit('message', { text: 'waiting for another user to join...' });
     }
   };
 
-  assignRoom();
+  socket.on('join', username => {
+    assignRoom(username);
+  });
 
   socket.on('message', message => {
     io.to(getCurrRoom()).emit('message', message);
   });
 
-  socket.on('hop', () => {
-    const currRoom = getCurrRoom();
-    socket.leave(currRoom, () => {
-      socket.to(currRoom).emit('message', { text: 'user has hopped away :(' });
-      socket.to(currRoom).emit('message', { text: 'waiting for another user to join...' });
-      assignRoom(currRoom);
+  socket.on('hop', username => {
+    const prevRoom = getCurrRoom();
+    socket.leave(prevRoom, () => {
+      socket.to(prevRoom).emit('message', { text: `${username} has hopped away :(` });
+      socket.to(prevRoom).emit('message', { text: 'waiting for another user to join...' });
+      assignRoom(username, prevRoom);
     });
   });
 

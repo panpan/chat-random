@@ -16,6 +16,8 @@ export default class Chat extends React.Component {
   }
 
   componentDidMount() {
+    const { username } = this.props;
+    this.socket.emit('join', username);
     this.socket.on('message', this.receiveMessage);
   }
 
@@ -56,7 +58,8 @@ export default class Chat extends React.Component {
   };
 
   handleHop = () => {
-    this.socket.emit('hop');
+    const { username } = this.props;
+    this.setState({ messages: [] }, () => this.socket.emit('hop', username));
   }
 
   handleDelay = text => {
@@ -82,8 +85,10 @@ export default class Chat extends React.Component {
         <div className='messages' ref={msgs => { this.msgs = msgs; }}>
           {messages.map(message => (
             <p key={shortid.generate()}>
-              {message.username && <span className='username'>{message.username}: </span>}
-              <span className='text'>{message.text}</span>
+              {message.username
+                ? <span><span className='username'>{message.username}: </span>{message.text}</span>
+                : <span className='server-msg'>{message.text}</span>
+              }
             </p>
           ))}
         </div>

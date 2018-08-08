@@ -31,3 +31,8 @@ span.username {
 	font-weight: bold;
 	color: darkgreen;
 }
+
+span.server-msg {
+	font-style: italic;
+	color: slategrey;
+}
