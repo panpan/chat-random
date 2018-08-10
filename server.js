@@ -4,6 +4,7 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 const shortid = require('shortid');
+const path = require('path');
 
 const port = 3000;
 
@@ -79,6 +80,14 @@ io.on('connection', socket => {
     console.log('user disconnected');
   });
 });
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/dist')));
+
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/dist/index.html'));
+  });
+}
 
 server.listen(port, () => {
   console.log(`listening on port ${port}`);

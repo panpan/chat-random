@@ -1,5 +1,5 @@
 {
-  "name": "chat-app",
+  "name": "chatrooms",
   "version": "1.0.0",
   "main": "server.js",
   "author": "panpan",
@@ -7,7 +7,10 @@
   "scripts": {
     "server": "nodemon --harmony server.js",
     "client": "cd client && yarn start",
-    "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "dev": "concurrently --kill-others-on-fail 'yarn server' 'yarn client'",
+    "prod": "cd client && yarn build && cd .. && NODE_ENV=production node --harmony server.js",
+    "build": "NODE_ENV=production cd client && yarn && yarn build",
+    "start": "NODE_ENV=production node --harmony server.js"
   },
   "dependencies": {
     "express": "^4.16.3",

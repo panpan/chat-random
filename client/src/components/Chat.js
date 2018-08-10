@@ -6,7 +6,9 @@ import shortid from 'shortid';
 import '../styles/Chat.css';
 
 export default class Chat extends React.Component {
-  socket = socketIOClient('localhost:3000');
+  socket = process.env.NODE_ENV === 'production'
+    ? socketIOClient.connect()
+    : socketIOClient('localhost:3000');
 
   static propTypes = { username: PropTypes.string.isRequired };
 
