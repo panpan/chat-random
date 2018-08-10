@@ -8,8 +8,8 @@ chat app that randomly pairs two users and lets them chat
 
 ## development
 ```
-$ git clone https://github.com/panpan/chats.git
-$ cd chats
+$ git clone https://github.com/panpan/chatrooms.git
+$ cd chatrooms
 $ yarn && cd client && yarn
-$ cd .. && yarn start
+$ cd .. && yarn dev
 ```
