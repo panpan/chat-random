@@ -55,7 +55,7 @@ io.on('connection', socket => {
       } else {
         socket.emit('message', { text: `welcome to the chatroom, ${username}!` });
       }
-      socket.emit('message', { text: 'waiting for another user to join...' });
+      socket.emit('message', { text: 'waiting for someone else to join...' });
     }
   };
 
@@ -71,9 +71,14 @@ io.on('connection', socket => {
     const prevRoom = getCurrRoom();
     socket.leave(prevRoom, () => {
       socket.to(prevRoom).emit('message', { text: `${username} has hopped away :(` });
-      socket.to(prevRoom).emit('message', { text: 'waiting for another user to join...' });
+      socket.to(prevRoom).emit('message', { text: 'waiting for someone else to join...' });
       assignRoom(username, prevRoom);
     });
+  });
+
+  socket.on('disconnecting', () => {
+    socket.to(getCurrRoom()).emit('message', { text: 'your chat partner has left the room :(' });
+    socket.to(getCurrRoom()).emit('message', { text: 'waiting for someone else to join...' });
   });
 
   socket.on('disconnect', () => {
