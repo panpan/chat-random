@@ -82,14 +82,17 @@ export default class Chat extends React.Component {
 
     return (
       <div className='chat'>
-        <h1>...</h1>
+        <h1>&#9787;</h1>
 
         <div className='messages' ref={msgs => { this.msgs = msgs; }}>
-          {messages.map(message => (
+          {messages.map((message, idx) => (
             <p key={shortid.generate()}>
-              {message.username
-                ? <span><span className='username'>{message.username}: </span>{message.text}</span>
-                : <span className='server-msg'>{message.text}</span>
+              {message.username ? (
+                <span>
+                  {message.username !== messages[idx - 1].username && <span className='username'>{message.username}: </span>}
+                  {message.text}
+                </span>
+              ) : <span className='server-msg'>{message.text}</span>
               }
             </p>
           ))}

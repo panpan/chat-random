@@ -33,7 +33,10 @@ module.exports = {
   },
   resolve: { extensions: ['*', '.js', '.jsx'] },
   plugins: [
-    new HtmlWebpackPlugin({ template: './src/index.html' }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      favicon: './favicon.ico',
+    }),
     new MiniCssExtractPlugin({
       filename: prod ? '[name].[hash].css' : '[name].css',
       chunkFilename: prod ? '[id].[hash].css' : '[id].css',

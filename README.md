@@ -1,4 +1,4 @@
-# ...
+# &#9786;
 
 chat app that randomly pairs two users and lets them chat
 
